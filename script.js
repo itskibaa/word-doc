@@ -3,12 +3,19 @@ const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
 const themeBtn = document.getElementById('themeBtn');
 const container = document.getElementById('notepad-container');
+const title = document.getElementById('panel-title');
 
 let isTwitch = !!window.Twitch?.ext;
 
-// -----------------------------
-// Load notes function
-// -----------------------------
+// Helper to update "Last saved" timestamp in the header
+function updateTitleWithTimestamp() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    title.textContent = `Stream Notes (Last saved at ${hours}:${minutes})`;
+}
+
+// Load notes from Twitch configuration or localStorage
 function loadNotes() {
     if (isTwitch) {
         window.Twitch.ext.configuration.get('broadcaster', (err, config) => {
@@ -21,63 +28,60 @@ function loadNotes() {
             console.log("Loaded notes from Twitch config:", saved);
         });
     } else {
-        // Browser fallback for testing
         const saved = localStorage.getItem('notes') || '';
         textarea.value = saved;
         console.log("Loaded notes from localStorage:", saved);
     }
 }
 
-// -----------------------------
 // Save notes function
-// -----------------------------
 function saveNotes() {
     if (isTwitch) {
         const content = { notes: textarea.value };
         window.Twitch.ext.configuration.set('broadcaster', '1.0', JSON.stringify(content), err => {
             if (err) console.error('Error saving notes:', err);
-            else console.log('Notes saved successfully to Twitch config!');
+            else {
+                console.log('Notes saved successfully to Twitch config!');
+                updateTitleWithTimestamp();
+            }
         });
     } else {
         localStorage.setItem('notes', textarea.value);
         console.log("Notes saved to localStorage for testing");
+        updateTitleWithTimestamp();
     }
 }
 
-// -----------------------------
 // Clear notes function
-// -----------------------------
 function clearNotes() {
     textarea.value = "";
     if (isTwitch) {
         window.Twitch.ext.configuration.set('broadcaster', '1.0', JSON.stringify({ notes: "" }), err => {
             if (err) console.error('Error clearing notes:', err);
-            else console.log('Notes cleared in Twitch config!');
+            else {
+                console.log('Notes cleared in Twitch config!');
+                updateTitleWithTimestamp();
+            }
         });
     } else {
         localStorage.removeItem('notes');
         console.log("Notes cleared from localStorage for testing");
+        updateTitleWithTimestamp();
     }
 }
 
-// -----------------------------
-// Dark mode toggle
-// -----------------------------
+// Toggle dark mode
 function toggleTheme() {
     container.classList.toggle('dark');
     console.log("Theme toggled");
 }
 
-// -----------------------------
 // Event listeners
-// -----------------------------
 saveBtn.addEventListener('click', saveNotes);
 clearBtn.addEventListener('click', clearNotes);
 themeBtn.addEventListener('click', toggleTheme);
 
-// -----------------------------
-// Twitch authorization or direct load
-// -----------------------------
+// Twitch authorization or local load
 if (isTwitch) {
     window.Twitch.ext.onAuthorized((auth) => {
         console.log('Twitch extension authorized!', auth);
