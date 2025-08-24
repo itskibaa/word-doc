@@ -7,7 +7,7 @@ const title = document.getElementById('panel-title');
 
 let isTwitch = !!window.Twitch?.ext;
 
-// Helper to update "Last saved" timestamp in the header
+// Update header with last saved time
 function updateTitleWithTimestamp() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -15,7 +15,7 @@ function updateTitleWithTimestamp() {
     title.textContent = `Stream Notes (Last saved at ${hours}:${minutes})`;
 }
 
-// Load notes from Twitch configuration or localStorage
+// Load notes
 function loadNotes() {
     if (isTwitch) {
         window.Twitch.ext.configuration.get('broadcaster', (err, config) => {
@@ -34,7 +34,7 @@ function loadNotes() {
     }
 }
 
-// Save notes function
+// Save notes
 function saveNotes() {
     if (isTwitch) {
         const content = { notes: textarea.value };
@@ -52,7 +52,7 @@ function saveNotes() {
     }
 }
 
-// Clear notes function
+// Clear notes
 function clearNotes() {
     textarea.value = "";
     if (isTwitch) {
@@ -70,7 +70,7 @@ function clearNotes() {
     }
 }
 
-// Toggle dark mode
+// Toggle theme
 function toggleTheme() {
     container.classList.toggle('dark');
     console.log("Theme toggled");
@@ -81,7 +81,7 @@ saveBtn.addEventListener('click', saveNotes);
 clearBtn.addEventListener('click', clearNotes);
 themeBtn.addEventListener('click', toggleTheme);
 
-// Twitch authorization or local load
+// Initialize
 if (isTwitch) {
     window.Twitch.ext.onAuthorized((auth) => {
         console.log('Twitch extension authorized!', auth);
