@@ -1,27 +1,27 @@
-body {
-  font-family: Georgia, Garamond;
-  background-color: #18181b;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+html, body {
+  width: 100%;
+  height: 100%;
   margin: 0;
+  padding: 0;
+  background-color: #18181b;
+  font-family: Georgia, Garamond, sans-serif;
+  color: #fff;
 }
 
 .container {
   background: #1f1f23;
   border-radius: 8px;
-  padding: 20px;
-  width: 300px;
+  padding: 10px;
+  width: 95%;
+  margin: 10px auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 textarea {
   width: 100%;
-  height: 150px;
+  height: 120px;
   margin-bottom: 10px;
-  padding: 1px;
+  padding: 8px;
   border-radius: 6px;
   border: none;
   resize: none;
