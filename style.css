@@ -20,6 +20,17 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box; /* ensures padding is included in width */
+  transition: background 0.3s;
+}
+
+/* Dark theme for container */
+#notepad-container.dark {
+  background-color: #2b2b2b;
+}
+
+#notepad-container.dark textarea {
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
 /* Header */
@@ -46,6 +57,7 @@ textarea {
   outline: none;
   overflow-y: auto;
   font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* Buttons */
@@ -71,12 +83,7 @@ button:hover {
   background-color: #772ce8;
 }
 
-/* Optional dark/light toggle (optional) */
-body.dark #notepad-container {
-  background-color: #1f1f1f;
-}
-
-body.dark textarea {
-  background-color: #2b2b2b;
-  color: #fff;
+/* Optional dark mode button hover */
+#notepad-container.dark button:hover {
+  background-color: #5a1dbf;
 }
