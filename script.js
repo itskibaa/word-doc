@@ -1,26 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
     const noteInput = document.getElementById('noteInput');
+    const saveBtn = document.getElementById('saveBtn');
     const notesList = document.getElementById('notesList');
 
-    // Load notes from localStorage or start empty
     let notes = JSON.parse(localStorage.getItem('twitchNotes')) || [];
     renderNotes();
 
-    // Add a new note when pressing Enter
-    noteInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); // prevent newline
-            const text = noteInput.value.trim();
-            if (text) {
-                notes.push(text);
-                localStorage.setItem('twitchNotes', JSON.stringify(notes));
-                renderNotes();
-                noteInput.value = '';
-            }
+    saveBtn.addEventListener('click', () => {
+        const text = noteInput.value.trim();
+        if (text) {
+            notes.push(text);
+            localStorage.setItem('twitchNotes', JSON.stringify(notes));
+            renderNotes();
+            noteInput.value = '';
         }
     });
 
-    // Render all notes
     function renderNotes() {
         notesList.innerHTML = '';
         notes.forEach((note, index) => {
@@ -33,10 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const actionsDiv = document.createElement('div');
             actionsDiv.classList.add('note-actions');
 
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'Edit';
+            editBtn.addEventListener('click', () => editNote(index));
+
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = 'Delete';
             deleteBtn.addEventListener('click', () => deleteNote(index));
 
+            actionsDiv.appendChild(editBtn);
             actionsDiv.appendChild(deleteBtn);
 
             li.appendChild(span);
@@ -45,10 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Delete a specific note instantly
+    function editNote(index) {
+        const newNote = prompt('Edit your note:', notes[index]);
+        if (newNote !== null && newNote.trim() !== '') {
+            notes[index] = newNote.trim();
+            localStorage.setItem('twitchNotes', JSON.stringify(notes));
+            renderNotes();
+        }
+    }
+
     function deleteNote(index) {
-        notes.splice(index, 1);
-        localStorage.setItem('twitchNotes', JSON.stringify(notes));
-        renderNotes();
+        if (confirm('Are you sure you want to delete this note?')) {
+            notes.splice(index, 1);
+            localStorage.setItem('twitchNotes', JSON.stringify(notes));
+            renderNotes();
+        }
     }
 });
