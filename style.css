@@ -10,7 +10,7 @@ body {
 /* Notepad container */
 #notepad-container {
   width: 75%;
-  max-width: 250px;
+  max-width: 300px;
   background-color: #1f1f1f; /* dark Twitch panel style */
   border: 1px solid #333;
   border-radius: 8px;
