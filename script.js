@@ -1,88 +1,62 @@
-const textarea = document.getElementById('notepad');
+const noteInput = document.getElementById('noteInput');
 const saveBtn = document.getElementById('saveBtn');
-const clearBtn = document.getElementById('clearBtn');
-const container = document.getElementById('notepad-container');
-const title = document.getElementById('panel-title');
+const notesList = document.getElementById('notesList');
 
-let isTwitch = !!window.Twitch?.ext;
+let notes = JSON.parse(localStorage.getItem('twitchNotes')) || [];
+renderNotes();
 
-// Update "Last saved" span
-function updateTitleWithTimestamp() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    lastSaved.textContent = `(Last saved at ${hours}:${minutes})`;
+saveBtn.addEventListener('click', () => {
+  const text = noteInput.value.trim();
+  if (text) {
+    notes.push(text);
+    localStorage.setItem('twitchNotes', JSON.stringify(notes));
+    renderNotes();
+    noteInput.value = '';
+  }
+});
 
-// Load notes from Twitch or localStorage
-function loadNotes() {
-    if (isTwitch) {
-        window.Twitch.ext.configuration.get('broadcaster', (err, config) => {
-            if (err) {
-                console.error('Error loading configuration:', err);
-                return;
-            }
-            const saved = config?.content?.notes || "";
-            textarea.value = saved;
-            console.log("Loaded notes from Twitch config:", saved);
-        });
-    } else {
-        const saved = localStorage.getItem('notes') || '';
-        textarea.value = saved;
-        console.log("Loaded notes from localStorage:", saved);
-    }
+function renderNotes() {
+  notesList.innerHTML = '';
+  notes.forEach((note, index) => {
+    const li = document.createElement('li');
+
+    const span = document.createElement('span');
+    span.textContent = note;
+    span.classList.add('note-text');
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.classList.add('note-actions');
+
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.addEventListener('click', () => editNote(index));
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.addEventListener('click', () => deleteNote(index));
+
+    actionsDiv.appendChild(editBtn);
+    actionsDiv.appendChild(deleteBtn);
+
+    li.appendChild(span);
+    li.appendChild(actionsDiv);
+    notesList.appendChild(li);
+  });
 }
 
-// Save notes
-function saveNotes() {
-    if (isTwitch) {
-        const content = { notes: textarea.value };
-        window.Twitch.ext.configuration.set('broadcaster', '1.0', JSON.stringify(content), err => {
-            if (err) console.error('Error saving notes:', err);
-            else {
-                console.log('Notes saved to Twitch config');
-                updateTitleWithTimestamp();
-            }
-        });
-    } else {
-        localStorage.setItem('notes', textarea.value);
-        console.log("Notes saved to localStorage");
-        updateTitleWithTimestamp();
-    }
+function editNote(index) {
+  const newNote = prompt('Edit your note:', notes[index]);
+  if (newNote !== null && newNote.trim() !== '') {
+    notes[index] = newNote.trim();
+    localStorage.setItem('twitchNotes', JSON.stringify(notes));
+    renderNotes();
+  }
 }
 
-// Clear notes
-function clearNotes() {
-    textarea.value = "";
-    if (isTwitch) {
-        window.Twitch.ext.configuration.set('broadcaster', '1.0', JSON.stringify({ notes: "" }), err => {
-            if (err) console.error('Error clearing notes:', err);
-            else {
-                console.log('Notes cleared in Twitch config');
-                updateTitleWithTimestamp();
-            }
-        });
-    } else {
-        localStorage.removeItem('notes');
-        console.log("Notes cleared from localStorage");
-        updateTitleWithTimestamp();
-    }
-}
-
-// Attach listeners safely
-function attachEventListeners() {
-    saveBtn.addEventListener('click', saveNotes);
-    clearBtn.addEventListener('click', clearNotes);
-}
-
-// Initialize extension
-if (isTwitch) {
-    window.Twitch.ext.onAuthorized((auth) => {
-        console.log('Twitch extension authorized!', auth);
-        loadNotes();
-        attachEventListeners();
-    });
-} else {
-    console.log("Running outside Twitch - using localStorage for testing");
-    loadNotes();
-    attachEventListeners();
+function deleteNote(index) {
+  if (confirm('Are you sure you want to delete this note?')) {
+    notes.splice(index, 1);
+    localStorage.setItem('twitchNotes', JSON.stringify(notes));
+    renderNotes();
+  }
 }
