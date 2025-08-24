@@ -1,84 +1,79 @@
-/* General body */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: transparent;
+  font-family: Georgia, Garamond;
+  background-color: #18181b;
   color: #fff;
-  margin: 0;
-  padding: 0;
-}
-
-/* Notepad container */
-#notepad-container {
-  width: 75%;
-  max-width: 300px;
-  background-color: #1f1f1f; /* dark Twitch panel style */
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
-/* Header */
-#notepad-container h2 {
-  font-size: 16px;
-  margin: 0 0 4px 0;
-  font-weight: 600;
-  color: #fff;
-  text-align: left;
+.container {
+  background: #1f1f23;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Last saved info inline with header */
-#last-saved {
-  font-size: 12px;
-  color: #fff;
-  margin-left: 8px; /* space between header text and timestamp */
-  display: inline; 
-}
-
-/* Textarea */
 textarea {
   width: 100%;
-  height: 200px;
+  height: 150px;
+  margin-bottom: 10px;
   padding: 1px;
-  font-size: 14px;
-  line-height: 1.5;
-  background-color: #2b2b2b;
-  color: #fff;
+  border-radius: 6px;
   border: none;
-  border-radius: 4px;
   resize: none;
-  outline: none;
-  overflow-y: auto;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* Buttons */
-.buttons {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-start;
-  gap: 8px;
+  background-color: #2a2a2d;
+  color: #fff;
 }
 
 button {
-  padding: 6px 10px;
-  font-size: 13px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #c27ba0; /* Twitch purple */
+  width: 100%;
+  padding: 10px;
+  background: #93c47d;
   color: #fff;
-  transition: background 0.2s;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 button:hover {
-  background-color: #a64d79;
+  background: #6aa84f;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0;
+}
 
-body.dark textarea {
-  background-color: #8fce00;
+li {
+  background: #2a2a2d;
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-text {
+  flex: 1;
+}
+
+.note-actions button {
+  background: #444;
+  border: none;
+  padding: 4px 6px;
+  margin-left: 5px;
+  border-radius: 4px;
   color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.note-actions button:hover {
+  background: #666;
 }
