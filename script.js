@@ -1,19 +1,17 @@
 const textarea = document.getElementById('notepad');
 const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
-const themeBtn = document.getElementById('themeBtn');
 const container = document.getElementById('notepad-container');
 const title = document.getElementById('panel-title');
 
 let isTwitch = !!window.Twitch?.ext;
 
-// Update header with last saved time
+// Update "Last saved" span
 function updateTitleWithTimestamp() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    title.textContent = `Stream Notes (Last saved at ${hours}:${minutes})`;
-}
+    lastSaved.textContent = `(Last saved at ${hours}:${minutes})`;
 
 // Load notes from Twitch or localStorage
 function loadNotes() {
@@ -70,17 +68,10 @@ function clearNotes() {
     }
 }
 
-// Toggle theme
-function toggleTheme() {
-    container.classList.toggle('dark');
-    console.log("Theme toggled");
-}
-
 // Attach listeners safely
 function attachEventListeners() {
     saveBtn.addEventListener('click', saveNotes);
     clearBtn.addEventListener('click', clearNotes);
-    themeBtn.addEventListener('click', toggleTheme);
 }
 
 // Initialize extension
