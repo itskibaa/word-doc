@@ -15,7 +15,7 @@ function updateTitleWithTimestamp() {
     title.textContent = `Stream Notes (Last saved at ${hours}:${minutes})`;
 }
 
-// Load notes
+// Load notes from Twitch or localStorage
 function loadNotes() {
     if (isTwitch) {
         window.Twitch.ext.configuration.get('broadcaster', (err, config) => {
@@ -41,13 +41,13 @@ function saveNotes() {
         window.Twitch.ext.configuration.set('broadcaster', '1.0', JSON.stringify(content), err => {
             if (err) console.error('Error saving notes:', err);
             else {
-                console.log('Notes saved successfully to Twitch config!');
+                console.log('Notes saved to Twitch config');
                 updateTitleWithTimestamp();
             }
         });
     } else {
         localStorage.setItem('notes', textarea.value);
-        console.log("Notes saved to localStorage for testing");
+        console.log("Notes saved to localStorage");
         updateTitleWithTimestamp();
     }
 }
@@ -59,13 +59,13 @@ function clearNotes() {
         window.Twitch.ext.configuration.set('broadcaster', '1.0', JSON.stringify({ notes: "" }), err => {
             if (err) console.error('Error clearing notes:', err);
             else {
-                console.log('Notes cleared in Twitch config!');
+                console.log('Notes cleared in Twitch config');
                 updateTitleWithTimestamp();
             }
         });
     } else {
         localStorage.removeItem('notes');
-        console.log("Notes cleared from localStorage for testing");
+        console.log("Notes cleared from localStorage");
         updateTitleWithTimestamp();
     }
 }
@@ -76,18 +76,22 @@ function toggleTheme() {
     console.log("Theme toggled");
 }
 
-// Event listeners
-saveBtn.addEventListener('click', saveNotes);
-clearBtn.addEventListener('click', clearNotes);
-themeBtn.addEventListener('click', toggleTheme);
+// Attach listeners safely
+function attachEventListeners() {
+    saveBtn.addEventListener('click', saveNotes);
+    clearBtn.addEventListener('click', clearNotes);
+    themeBtn.addEventListener('click', toggleTheme);
+}
 
-// Initialize
+// Initialize extension
 if (isTwitch) {
     window.Twitch.ext.onAuthorized((auth) => {
         console.log('Twitch extension authorized!', auth);
         loadNotes();
+        attachEventListeners();
     });
 } else {
     console.log("Running outside Twitch - using localStorage for testing");
     loadNotes();
+    attachEventListeners();
 }
